@@ -1,143 +1,44 @@
-<!DOCTYPE html>
-<html lang="fr">
+<!-- ============================= -->
+<!-- FENÊTRE DES DOSSIERS -->
+<!-- ============================= -->
 
-<head>
+<div id="modal" class="modal">
 
-    <meta charset="UTF-8">
+    <div class="modal-content">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- BOUTON RETOUR -->
 
-    <title>
-        Direction des Transports Terrestres - Circonscription des Îles Marquises
-    </title>
-
-    <link rel="stylesheet" href="style.css">
-
-</head>
-
-
-<body>
-
-
-    <!-- ============================= -->
-    <!-- EN-TÊTE -->
-    <!-- ============================= -->
-
-    <header class="header">
-
-        <img
-            src="logo.png"
-            alt="Logo Circonscription des Îles Marquises"
-            class="logo"
+        <button
+            id="retour"
+            class="retour-bouton"
+            type="button"
         >
+            ← Retour
+        </button>
 
-        <h1>
-            Circonscription des Îles Marquises
-        </h1>
+        <!-- CROIX -->
 
-        <h2>
-            Direction des Transports Terrestres
-        </h2>
+        <span id="close">
+            &times;
+        </span>
 
-    </header>
+        <!-- TITRE -->
 
+        <h2 id="titreDemarche"></h2>
 
-    <!-- ============================= -->
-    <!-- BIENVENUE -->
-    <!-- ============================= -->
+        <!-- LISTE DES PIÈCES -->
 
-    <section class="bienvenue">
-
-        <h2>
-            Bienvenue sur le portail des démarches
-        </h2>
-
-        <p>
-            Retrouvez facilement les pièces justificatives nécessaires
-            pour vos demandes auprès de la Direction des Transports Terrestres
-            de la Circonscription des Îles Marquises.
-        </p>
-
-    </section>
-
-
-    <!-- ============================= -->
-    <!-- CARTES DES DÉMARCHES -->
-    <!-- ============================= -->
-
-    <main>
-
-<div class="recherche">
-
-    <input
-        type="text"
-        id="recherche"
-        placeholder="🔎 Rechercher une démarche..."
-        autocomplete="off"
-    >
-
-</div>
-
-        <div id="cards">
-
-            <!-- Les cartes sont créées automatiquement par script.js -->
-
-        </div>
-
-    </main>
-
-
-    <!-- ============================= -->
-    <!-- FENÊTRE DES DOSSIERS -->
-    <!-- ============================= -->
-
-    <div id="modal" class="modal">
-
-        <div class="modal-content">
-
-
-            <!-- BOUTON RETOUR -->
-
-            <button
-                id="retour"
-                class="retour-bouton"
-                type="button"
-            >
-                ← Retour
-            </button>
-
-
-            <!-- CROIX -->
-
-            <span id="close">
-                &times;
-            </span>
-
-
-            <!-- TITRE -->
-
-            <h2 id="titreDemarche"></h2>
-
-
-            <!-- LISTE DES PIÈCES -->
-
-            <ul id="listePieces"></ul>
-
-
-        </div>
+        <ul id="listePieces"></ul>
 
     </div>
 
-
-    <!-- ============================= -->
-    <!-- SCRIPTS -->
-    <!-- ============================= -->
-
-    <script src="data.js"></script>
-
-    <script src="script.js"></script>
+</div>
 
 
-</body>
+<!-- ============================= -->
+<!-- SCRIPTS -->
+<!-- ============================= -->
 
-</html>
+<script src="data.js"></script>
+
+<script src="./script.js?v=2"></script>
