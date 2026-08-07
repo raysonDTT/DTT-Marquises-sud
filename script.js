@@ -410,29 +410,16 @@ function afficherDossier(dossier) {
 
 if (dossier.pieces) {
 
-    dossier.pieces.forEach((piece, index) => {
+    dossier.pieces.forEach((piece) => {
 
         const li = document.createElement("li");
 
-        const label = document.createElement("label");
-
-        const checkbox = document.createElement("input");
-
-        checkbox.type = "checkbox";
-
-        checkbox.className = "piece-checkbox";
-
-        checkbox.id = "piece-" + index;
-
-        label.htmlFor = checkbox.id;
-
-        label.appendChild(checkbox);
-
-        label.appendChild(
-            document.createTextNode(" " + piece)
-        );
-
-        li.appendChild(label);
+        li.innerHTML = `
+            <label class="piece-label">
+                <input type="checkbox" class="piece-checkbox">
+                <span>${piece}</span>
+            </label>
+        `;
 
         listePieces.appendChild(li);
 
