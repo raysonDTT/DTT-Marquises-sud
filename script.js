@@ -404,26 +404,43 @@ function afficherDossier(dossier) {
         });
 
     }
+// ====================================
+// PIÈCES AVEC CASES À COCHER
+// ====================================
 
+if (dossier.pieces) {
 
-    // ====================================
-    // PIÈCES
-    // ====================================
+    dossier.pieces.forEach((piece, index) => {
 
-    if (dossier.pieces) {
+        const li = document.createElement("li");
 
-        dossier.pieces.forEach((piece) => {
+        const label = document.createElement("label");
 
-            const li = document.createElement("li");
+        const checkbox = document.createElement("input");
 
-            li.textContent = "✔ " + piece;
+        checkbox.type = "checkbox";
 
-            listePieces.appendChild(li);
+        checkbox.className = "piece-checkbox";
 
-        });
+        checkbox.id = "piece-" + index;
 
-    }
+        label.htmlFor = checkbox.id;
 
+        label.appendChild(checkbox);
+
+        label.appendChild(
+            document.createTextNode(" " + piece)
+        );
+
+        li.appendChild(label);
+
+        listePieces.appendChild(li);
+
+    });
+
+}
+
+    
 
     // ====================================
     // BOUTON RETOUR
