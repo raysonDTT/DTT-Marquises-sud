@@ -10,7 +10,6 @@ const titreDemarche = document.getElementById("titreDemarche");
 const listePieces = document.getElementById("listePieces");
 
 const recherche = document.getElementById("recherche");
-alert("NOUVEAU SCRIPT CHARGÉ");
 
 
 // ========================================
@@ -77,7 +76,7 @@ function normaliser(texte) {
 
 
 // ========================================
-// RECHERCHER DANS LES DOSSIERS
+// RECHERCHE
 // ========================================
 
 function rechercherDossiers(texte) {
@@ -86,10 +85,7 @@ function rechercherDossiers(texte) {
 
     const resultats = [];
 
-
     demarches.forEach((demarche) => {
-
-        // Dossier principal
 
         if (
             normaliser(demarche.titre)
@@ -103,9 +99,6 @@ function rechercherDossiers(texte) {
 
         }
 
-
-        // Sous-dossiers
-
         rechercherSousDossiers(
             demarche,
             demarche,
@@ -115,14 +108,13 @@ function rechercherDossiers(texte) {
 
     });
 
-
     return resultats;
 
 }
 
 
 // ========================================
-// RECHERCHE RÉCURSIVE DES SOUS-DOSSIERS
+// RECHERCHE DES SOUS-DOSSIERS
 // ========================================
 
 function rechercherSousDossiers(
@@ -138,7 +130,6 @@ function rechercherSousDossiers(
 
     }
 
-
     dossier.sousDossiers.forEach((sous) => {
 
         if (
@@ -153,7 +144,6 @@ function rechercherSousDossiers(
 
         }
 
-
         rechercherSousDossiers(
             dossierPrincipal,
             sous,
@@ -167,13 +157,12 @@ function rechercherSousDossiers(
 
 
 // ========================================
-// AFFICHER LES RÉSULTATS DE RECHERCHE
+// RÉSULTATS DE RECHERCHE
 // ========================================
 
 function afficherResultatsRecherche(resultats) {
 
     cards.innerHTML = "";
-
 
     resultats.forEach((resultat) => {
 
@@ -181,9 +170,7 @@ function afficherResultatsRecherche(resultats) {
 
         carte.className = "card";
 
-
         const dossier = resultat.dossier;
-
 
         carte.innerHTML = `
             <div class="icone">
@@ -195,14 +182,11 @@ function afficherResultatsRecherche(resultats) {
             <button type="button">Consulter</button>
         `;
 
-
         const bouton = carte.querySelector("button");
-
 
         bouton.onclick = function () {
 
             historique = [];
-
 
             if (resultat.parent) {
 
@@ -213,11 +197,9 @@ function afficherResultatsRecherche(resultats) {
 
             }
 
-
             afficherDossier(dossier);
 
         };
-
 
         cards.appendChild(carte);
 
@@ -233,7 +215,6 @@ function afficherResultatsRecherche(resultats) {
 function construireHistorique(parent, dossierRecherche) {
 
     historique = [];
-
 
     demarches.forEach((demarche) => {
 
@@ -253,7 +234,7 @@ function construireHistorique(parent, dossierRecherche) {
 
 
 // ========================================
-// TROUVER LE CHEMIN DU DOSSIER
+// TROUVER LE CHEMIN
 // ========================================
 
 function trouverChemin(
@@ -270,13 +251,11 @@ function trouverChemin(
 
     }
 
-
     if (!dossier.sousDossiers) {
 
         return false;
 
     }
-
 
     for (const sous of dossier.sousDossiers) {
 
@@ -294,14 +273,13 @@ function trouverChemin(
 
     }
 
-
     return false;
 
 }
 
 
 // ========================================
-// VÉRIFIER SI UN DOSSIER EXISTE
+// VÉRIFIER UN DOSSIER
 // ========================================
 
 function contientDossier(dossier, cible) {
@@ -312,13 +290,11 @@ function contientDossier(dossier, cible) {
 
     }
 
-
     if (!dossier.sousDossiers) {
 
         return false;
 
     }
-
 
     return dossier.sousDossiers.some(
         (sous) => contientDossier(sous, cible)
@@ -344,7 +320,6 @@ if (recherche) {
 
         const texte = recherche.value.trim();
 
-
         if (texte === "") {
 
             afficherCartes(demarches);
@@ -353,10 +328,8 @@ if (recherche) {
 
         }
 
-
         const resultats =
             rechercherDossiers(texte);
-
 
         afficherResultatsRecherche(resultats);
 
@@ -386,14 +359,14 @@ function afficherDossier(dossier) {
 
             const li = document.createElement("li");
 
-            const bouton = document.createElement("button");
+            const bouton =
+                document.createElement("button");
 
             bouton.type = "button";
 
             bouton.className = "sous-bouton";
 
             bouton.textContent = sous.titre;
-
 
             bouton.onclick = function () {
 
@@ -402,7 +375,6 @@ function afficherDossier(dossier) {
                 afficherDossier(sous);
 
             };
-
 
             li.appendChild(bouton);
 
@@ -421,8 +393,8 @@ function afficherDossier(dossier) {
 
         dossier.pieces.forEach((piece) => {
 
-            const li = document.createElement("li");
-
+            const li =
+                document.createElement("li");
 
             const label =
                 document.createElement("label");
@@ -435,7 +407,8 @@ function afficherDossier(dossier) {
 
             checkbox.type = "checkbox";
 
-            checkbox.className = "piece-checkbox";
+            checkbox.className =
+                "piece-checkbox";
 
 
             const texte =
@@ -447,7 +420,6 @@ function afficherDossier(dossier) {
             label.appendChild(checkbox);
 
             label.appendChild(texte);
-
 
             li.appendChild(label);
 
@@ -464,18 +436,16 @@ function afficherDossier(dossier) {
 
     if (historique.length > 0) {
 
-        retourBtn.style.display = "inline-block";
+        retourBtn.style.display =
+            "inline-block";
 
     } else {
 
-        retourBtn.style.display = "none";
+        retourBtn.style.display =
+            "none";
 
     }
 
-
-    // ====================================
-    // OUVRIR LA FENÊTRE
-    // ====================================
 
     modal.style.display = "block";
 
@@ -494,10 +464,8 @@ retourBtn.onclick = function () {
 
     }
 
-
     const dossierPrecedent =
         historique.pop();
-
 
     afficherDossier(dossierPrecedent);
 
@@ -505,7 +473,7 @@ retourBtn.onclick = function () {
 
 
 // ========================================
-// CROIX DE FERMETURE
+// CROIX
 // ========================================
 
 closeBtn.onclick = function () {
@@ -520,7 +488,7 @@ closeBtn.onclick = function () {
 
 
 // ========================================
-// CLIQUER EN DEHORS DE LA FENÊTRE
+// CLIQUER EN DEHORS
 // ========================================
 
 window.onclick = function (e) {
