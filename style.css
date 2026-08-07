@@ -849,7 +849,7 @@ margin:0;
 .retour-bouton:active {
     transform: scale(0.97);
 }
-/* Cases à cocher */
+    /* ===== CASES A COCHER ===== */
 
 .piece-label {
     display: flex;
