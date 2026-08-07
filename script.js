@@ -1,3 +1,5 @@
+alert("SCRIPT.JS EST BIEN CHARGÉ");
+
 const cards = document.getElementById("cards");
 
 const modal = document.getElementById("modal");
