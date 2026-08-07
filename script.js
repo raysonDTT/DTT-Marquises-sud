@@ -8,6 +8,7 @@ const titreDemarche = document.getElementById("titreDemarche");
 const listePieces = document.getElementById("listePieces");
 
 const recherche = document.getElementById("recherche");
+alert("NOUVEAU SCRIPT CHARGÉ");
 
 
 // ========================================
