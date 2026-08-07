@@ -2,56 +2,126 @@ const cards = document.getElementById("cards");
 
 const modal = document.getElementById("modal");
 const closeBtn = document.getElementById("close");
+const retourBtn = document.getElementById("retour");
 
 const titreDemarche = document.getElementById("titreDemarche");
 const listePieces = document.getElementById("listePieces");
 
+const recherche = document.getElementById("recherche");
+
 
 // ========================================
-// CARTES DES DOSSIERS PRINCIPAUX
+// HISTORIQUE DES DOSSIERS
 // ========================================
 
-demarches.forEach((demarche) => {
-
-    const carte = document.createElement("div");
-
-    carte.className = "card";
-
-    carte.innerHTML = `
-
-        <div class="icone">
-            ${demarche.icone ? demarche.icone : "📄"}
-        </div>
-
-        <h3>${demarche.titre}</h3>
-
-        <button>Consulter</button>
-
-    `;
+let historique = [];
 
 
-    const bouton = carte.querySelector("button");
+// ========================================
+// AFFICHER LES DOSSIERS PRINCIPAUX
+// ========================================
+
+function afficherCartes(liste) {
+
+    cards.innerHTML = "";
 
 
-    // Le bouton reste uniquement pour les dossiers principaux
+    liste.forEach((demarche) => {
 
-    bouton.addEventListener("click", () => {
+        const carte = document.createElement("div");
 
-        ouvrirDossier(demarche);
+        carte.className = "card";
+
+
+        carte.innerHTML = `
+            <div class="icone">
+                ${demarche.icone ? demarche.icone : "📄"}
+            </div>
+
+            <h3>${demarche.titre}</h3>
+
+            <button type="button">Consulter</button>
+        `;
+
+
+        const bouton = carte.querySelector("button");
+
+
+        bouton.onclick = function () {
+
+            historique = [];
+
+            afficherDossier(demarche);
+
+        };
+
+
+        cards.appendChild(carte);
 
     });
 
-
-    cards.appendChild(carte);
-
-});
+}
 
 
 // ========================================
-// OUVERTURE D'UN DOSSIER
+// AFFICHAGE INITIAL
 // ========================================
 
-function ouvrirDossier(dossier){
+afficherCartes(demarches);
+
+
+// ========================================
+// RECHERCHE
+// ========================================
+
+if (recherche) {
+
+    recherche.addEventListener("input", function () {
+
+        const texte = recherche.value
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+
+
+        // Si la recherche est vide,
+        // on affiche tous les dossiers
+        if (texte === "") {
+
+            afficherCartes(demarches);
+
+            return;
+
+        }
+
+
+        // Recherche uniquement dans les dossiers principaux
+        const resultats = demarches.filter((demarche) => {
+
+            const titre = demarche.titre
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+
+
+            return titre.includes(texte);
+
+        });
+
+
+        afficherCartes(resultats);
+
+    });
+
+}
+
+
+// ========================================
+// AFFICHER UN DOSSIER
+// ========================================
+
+function afficherDossier(dossier) {
 
     titreDemarche.textContent = dossier.titre;
 
@@ -62,7 +132,7 @@ function ouvrirDossier(dossier){
     // SOUS-DOSSIERS
     // ====================================
 
-    if(dossier.sousDossiers){
+    if (dossier.sousDossiers) {
 
         dossier.sousDossiers.forEach((sous) => {
 
@@ -70,19 +140,20 @@ function ouvrirDossier(dossier){
 
             const bouton = document.createElement("button");
 
-
-            // Le bouton affiche uniquement le nom du thème
-
-            bouton.textContent = sous.titre;
+            bouton.type = "button";
 
             bouton.className = "sous-bouton";
 
+            bouton.textContent = sous.titre;
 
-            // Clic directement sur le thème
 
-            bouton.onclick = () => {
+            bouton.onclick = function () {
 
-                ouvrirDossier(sous);
+                // On mémorise le dossier actuel
+                historique.push(dossier);
+
+                // On ouvre le sous-dossier
+                afficherDossier(sous);
 
             };
 
@@ -97,10 +168,10 @@ function ouvrirDossier(dossier){
 
 
     // ====================================
-    // AFFICHAGE DES PIÈCES
+    // PIÈCES
     // ====================================
 
-    else if(dossier.pieces){
+    if (dossier.pieces) {
 
         dossier.pieces.forEach((piece) => {
 
@@ -115,31 +186,79 @@ function ouvrirDossier(dossier){
     }
 
 
+    // ====================================
+    // BOUTON RETOUR
+    // ====================================
+
+    if (historique.length > 0) {
+
+        retourBtn.style.display = "inline-block";
+
+    } else {
+
+        retourBtn.style.display = "none";
+
+    }
+
+
+    // ====================================
+    // OUVRIR LA FENÊTRE
+    // ====================================
+
     modal.style.display = "block";
 
 }
 
 
 // ========================================
-// FERMETURE AVEC LE X
+// BOUTON RETOUR
 // ========================================
 
-closeBtn.onclick = () => {
+retourBtn.onclick = function () {
 
-    modal.style.display = "none";
+    if (historique.length === 0) {
+
+        return;
+
+    }
+
+
+    const dossierPrecedent = historique.pop();
+
+
+    afficherDossier(dossierPrecedent);
 
 };
 
 
 // ========================================
-// FERMETURE EN CLIQUANT À L'EXTÉRIEUR
+// CROIX
 // ========================================
 
-window.onclick = (e) => {
+closeBtn.onclick = function () {
 
-    if(e.target === modal){
+    modal.style.display = "none";
+
+    historique = [];
+
+    retourBtn.style.display = "none";
+
+};
+
+
+// ========================================
+// CLIQUER EN DEHORS DE LA FENÊTRE
+// ========================================
+
+window.onclick = function (e) {
+
+    if (e.target === modal) {
 
         modal.style.display = "none";
+
+        historique = [];
+
+        retourBtn.style.display = "none";
 
     }
 
