@@ -305,7 +305,7 @@ margin-left:-200px;
 
 
 
-/* Liste des pièces */
+/* Liste des piÃ¨ces */
 
 
 #listePieces{
@@ -798,6 +798,34 @@ margin:0;
 
 
 
+}
+    .recherche {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0 25px;
+}
+
+#recherche {
+    width: 90%;
+    max-width: 600px;
+    padding: 14px 20px;
+    border: 2px solid #ccc;
+    border-radius: 30px;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box;
+    background: white;
+    transition: 0.2s;
+}
+
+#recherche:focus {
+    border-color: #333;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+}
+
+#recherche::placeholder {
+    color: #777;
 }
 
 
