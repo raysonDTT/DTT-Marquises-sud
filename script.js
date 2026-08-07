@@ -25,13 +25,11 @@ function afficherCartes(liste) {
 
     cards.innerHTML = "";
 
-
     liste.forEach((demarche) => {
 
         const carte = document.createElement("div");
 
         carte.className = "card";
-
 
         carte.innerHTML = `
             <div class="icone">
@@ -39,6 +37,150 @@ function afficherCartes(liste) {
             </div>
 
             <h3>${demarche.titre}</h3>
+
+            <button type="button">Consulter</button>
+        `;
+
+        const bouton = carte.querySelector("button");
+
+        bouton.onclick = function () {
+
+            historique = [];
+
+            afficherDossier(demarche);
+
+        };
+
+        cards.appendChild(carte);
+
+    });
+
+}
+
+
+// ========================================
+// NORMALISER LE TEXTE
+// ========================================
+
+function normaliser(texte) {
+
+    return texte
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+
+}
+
+
+// ========================================
+// RECHERCHER DANS LES DOSSIERS
+// ========================================
+
+function rechercherDossiers(texte) {
+
+    const rechercheTexte = normaliser(texte);
+
+    const resultats = [];
+
+
+    demarches.forEach((demarche) => {
+
+        // Le dossier principal correspond
+        if (normaliser(demarche.titre).includes(rechercheTexte)) {
+
+            resultats.push({
+                dossier: demarche,
+                parent: null
+            });
+
+        }
+
+
+        // Recherche dans les sous-dossiers
+        rechercherSousDossiers(
+            demarche,
+            demarche,
+            resultats,
+            rechercheTexte
+        );
+
+    });
+
+
+    return resultats;
+
+}
+
+
+// ========================================
+// RECHERCHE RÉCURSIVE DES SOUS-DOSSIERS
+// ========================================
+
+function rechercherSousDossiers(
+    dossierPrincipal,
+    dossier,
+    resultats,
+    rechercheTexte
+) {
+
+    if (!dossier.sousDossiers) {
+
+        return;
+
+    }
+
+
+    dossier.sousDossiers.forEach((sous) => {
+
+        if (normaliser(sous.titre).includes(rechercheTexte)) {
+
+            resultats.push({
+                dossier: sous,
+                parent: dossierPrincipal
+            });
+
+        }
+
+
+        // Chercher encore plus profondément
+        rechercherSousDossiers(
+            dossierPrincipal,
+            sous,
+            resultats,
+            rechercheTexte
+        );
+
+    });
+
+}
+
+
+// ========================================
+// AFFICHER LES RÉSULTATS DE RECHERCHE
+// ========================================
+
+function afficherResultatsRecherche(resultats) {
+
+    cards.innerHTML = "";
+
+
+    resultats.forEach((resultat) => {
+
+        const carte = document.createElement("div");
+
+        carte.className = "card";
+
+
+        const dossier = resultat.dossier;
+
+
+        carte.innerHTML = `
+            <div class="icone">
+                ${dossier.icone ? dossier.icone : "📄"}
+            </div>
+
+            <h3>${dossier.titre}</h3>
 
             <button type="button">Consulter</button>
         `;
@@ -51,7 +193,21 @@ function afficherCartes(liste) {
 
             historique = [];
 
-            afficherDossier(demarche);
+
+            // Si le résultat est un sous-dossier,
+            // on mémorise son chemin jusqu'au dossier principal.
+
+            if (resultat.parent) {
+
+                construireHistorique(
+                    resultat.parent,
+                    dossier
+                );
+
+            }
+
+
+            afficherDossier(dossier);
 
         };
 
@@ -59,6 +215,108 @@ function afficherCartes(liste) {
         cards.appendChild(carte);
 
     });
+
+}
+
+
+// ========================================
+// CONSTRUIRE L'HISTORIQUE
+// ========================================
+
+function construireHistorique(parent, dossierRecherche) {
+
+    historique = [];
+
+
+    // On retrouve le chemin depuis le dossier principal
+    demarches.forEach((demarche) => {
+
+        if (contientDossier(demarche, dossierRecherche)) {
+
+            trouverChemin(
+                demarche,
+                dossierRecherche,
+                []
+            );
+
+        }
+
+    });
+
+}
+
+
+// ========================================
+// TROUVER LE CHEMIN DU DOSSIER
+// ========================================
+
+function trouverChemin(
+    dossier,
+    cible,
+    chemin
+) {
+
+    if (dossier === cible) {
+
+        historique = chemin.slice();
+
+        return true;
+
+    }
+
+
+    if (!dossier.sousDossiers) {
+
+        return false;
+
+    }
+
+
+    for (const sous of dossier.sousDossiers) {
+
+        if (
+            trouverChemin(
+                sous,
+                cible,
+                [...chemin, dossier]
+            )
+        ) {
+
+            return true;
+
+        }
+
+    }
+
+
+    return false;
+
+}
+
+
+// ========================================
+// VÉRIFIER SI UN DOSSIER EST PRÉSENT
+// ========================================
+
+function contientDossier(dossier, cible) {
+
+    if (dossier === cible) {
+
+        return true;
+
+    }
+
+
+    if (!dossier.sousDossiers) {
+
+        return false;
+
+    }
+
+
+    return dossier.sousDossiers.some(
+        (sous) => contientDossier(sous, cible)
+    );
 
 }
 
@@ -78,15 +336,9 @@ if (recherche) {
 
     recherche.addEventListener("input", function () {
 
-        const texte = recherche.value
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .trim();
+        const texte = recherche.value.trim();
 
 
-        // Si la recherche est vide,
-        // on affiche tous les dossiers
         if (texte === "") {
 
             afficherCartes(demarches);
@@ -96,21 +348,10 @@ if (recherche) {
         }
 
 
-        // Recherche uniquement dans les dossiers principaux
-        const resultats = demarches.filter((demarche) => {
-
-            const titre = demarche.titre
-                .toLowerCase()
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "");
+        const resultats = rechercherDossiers(texte);
 
 
-            return titre.includes(texte);
-
-        });
-
-
-        afficherCartes(resultats);
+        afficherResultatsRecherche(resultats);
 
     });
 
@@ -149,10 +390,8 @@ function afficherDossier(dossier) {
 
             bouton.onclick = function () {
 
-                // On mémorise le dossier actuel
                 historique.push(dossier);
 
-                // On ouvre le sous-dossier
                 afficherDossier(sous);
 
             };
@@ -201,10 +440,6 @@ function afficherDossier(dossier) {
     }
 
 
-    // ====================================
-    // OUVRIR LA FENÊTRE
-    // ====================================
-
     modal.style.display = "block";
 
 }
@@ -224,7 +459,6 @@ retourBtn.onclick = function () {
 
 
     const dossierPrecedent = historique.pop();
-
 
     afficherDossier(dossierPrecedent);
 
