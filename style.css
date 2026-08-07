@@ -849,4 +849,23 @@ margin:0;
 .retour-bouton:active {
     transform: scale(0.97);
 }
+/* Cases à cocher */
 
+.piece-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 8px 0;
+}
+
+.piece-checkbox {
+    display: inline-block !important;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    appearance: auto !important;
+    cursor: pointer;
+}
