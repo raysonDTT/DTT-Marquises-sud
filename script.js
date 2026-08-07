@@ -1,4 +1,4 @@
-﻿const cards = document.getElementById("cards");
+const cards = document.getElementById("cards");
 
 const modal = document.getElementById("modal");
 const closeBtn = document.getElementById("close");
@@ -7,15 +7,15 @@ const titreDemarche = document.getElementById("titreDemarche");
 const listePieces = document.getElementById("listePieces");
 
 
-// Création des cartes principales
+// ========================================
+// CARTES DES DOSSIERS PRINCIPAUX
+// ========================================
 
 demarches.forEach((demarche) => {
-
 
     const carte = document.createElement("div");
 
     carte.className = "card";
-
 
     carte.innerHTML = `
 
@@ -33,6 +33,8 @@ demarches.forEach((demarche) => {
     const bouton = carte.querySelector("button");
 
 
+    // Le bouton reste uniquement pour les dossiers principaux
+
     bouton.addEventListener("click", () => {
 
         ouvrirDossier(demarche);
@@ -42,129 +44,103 @@ demarches.forEach((demarche) => {
 
     cards.appendChild(carte);
 
-
 });
 
 
-
-
-
-// Fonction ouverture dossier
+// ========================================
+// OUVERTURE D'UN DOSSIER
+// ========================================
 
 function ouvrirDossier(dossier){
 
-
     titreDemarche.textContent = dossier.titre;
-
 
     listePieces.innerHTML = "";
 
 
-
-    // Si le dossier contient des sous-dossiers
+    // ====================================
+    // SOUS-DOSSIERS
+    // ====================================
 
     if(dossier.sousDossiers){
 
-
         dossier.sousDossiers.forEach((sous) => {
 
-
             const li = document.createElement("li");
-
 
             const bouton = document.createElement("button");
 
 
-            bouton.textContent = "Consulter : " + sous.titre;
+            // Le bouton affiche uniquement le nom du thème
 
+            bouton.textContent = sous.titre;
 
             bouton.className = "sous-bouton";
 
 
+            // Clic directement sur le thème
 
             bouton.onclick = () => {
 
-
                 ouvrirDossier(sous);
-
 
             };
 
 
-
             li.appendChild(bouton);
-
 
             listePieces.appendChild(li);
 
-
         });
-
 
     }
 
 
-
-    // Si le dossier contient des pièces
+    // ====================================
+    // AFFICHAGE DES PIÈCES
+    // ====================================
 
     else if(dossier.pieces){
 
-
-
-        dossier.pieces.forEach((piece)=>{
-
+        dossier.pieces.forEach((piece) => {
 
             const li = document.createElement("li");
 
-
             li.textContent = "✔ " + piece;
-
 
             listePieces.appendChild(li);
 
-
         });
 
-
     }
-
 
 
     modal.style.display = "block";
 
-
 }
 
 
-
-
-
-// Fermeture avec le X
+// ========================================
+// FERMETURE AVEC LE X
+// ========================================
 
 closeBtn.onclick = () => {
 
-
     modal.style.display = "none";
-
 
 };
 
 
+// ========================================
+// FERMETURE EN CLIQUANT À L'EXTÉRIEUR
+// ========================================
 
-
-
-// Fermeture en cliquant dehors
-
-window.onclick = (e)=>{
-
+window.onclick = (e) => {
 
     if(e.target === modal){
 
-
         modal.style.display = "none";
 
-
     }
-
 
 };
