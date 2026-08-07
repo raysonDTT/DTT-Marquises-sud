@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 
 <head>
@@ -19,83 +19,123 @@
 <body>
 
 
-<header class="header">
+    <!-- ============================= -->
+    <!-- EN-TÊTE -->
+    <!-- ============================= -->
 
-    <img src="logo.png" alt="Logo Circonscription des Îles Marquises" class="logo">
+    <header class="header">
 
-    <h1>
-        Circonscription des Îles Marquises
-    </h1>
+        <img
+            src="logo.png"
+            alt="Logo Circonscription des Îles Marquises"
+            class="logo"
+        >
 
-    <h2>
-        Direction des Transports Terrestres
-    </h2>
+        <h1>
+            Circonscription des Îles Marquises
+        </h1>
 
-</header>
+        <h2>
+            Direction des Transports Terrestres
+        </h2>
 
-
-
-<main>
-
-
-<section class="bienvenue">
-
-    <h2>
-        Bienvenue sur le portail des démarches
-    </h2>
-
-    <p>
-        Retrouvez facilement les pièces justificatives nécessaires
-        pour vos demandes auprès de la Direction des Transports Terrestres
-        de la Circonscription des Îles Marquises.
-    </p>
-
-</section>
+    </header>
 
 
+    <!-- ============================= -->
+    <!-- BIENVENUE -->
+    <!-- ============================= -->
 
-<div id="cards" class="cards">
+    <section class="bienvenue">
 
-    <!-- Les cartes seront créées automatiquement -->
+        <h2>
+            Bienvenue sur le portail des démarches
+        </h2>
+
+        <p>
+            Retrouvez facilement les pièces justificatives nécessaires
+            pour vos demandes auprès de la Direction des Transports Terrestres
+            de la Circonscription des Îles Marquises.
+        </p>
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- CARTES DES DÉMARCHES -->
+    <!-- ============================= -->
+
+    <main>
+
+<div class="recherche">
+
+    <input
+        type="text"
+        id="recherche"
+        placeholder="🔎 Rechercher une démarche..."
+        autocomplete="off"
+    >
 
 </div>
 
+        <div id="cards">
 
-</main>
+            <!-- Les cartes sont créées automatiquement par script.js -->
 
+        </div>
 
-
-
-
-<!-- Fenêtre Consulter -->
-
-
-<div id="modal" class="modal">
+    </main>
 
 
-    <div class="modal-content">
+    <!-- ============================= -->
+    <!-- FENÊTRE DES DOSSIERS -->
+    <!-- ============================= -->
+
+    <div id="modal" class="modal">
+
+        <div class="modal-content">
 
 
-        <span id="close">&times;</span>
+            <!-- BOUTON RETOUR -->
+
+            <button
+                id="retour"
+                class="retour-bouton"
+                type="button"
+            >
+                ← Retour
+            </button>
 
 
-        <h2 id="titreDemarche"></h2>
+            <!-- CROIX -->
+
+            <span id="close">
+                &times;
+            </span>
 
 
-        <ul id="listePieces"></ul>
+            <!-- TITRE -->
 
+            <h2 id="titreDemarche"></h2>
+
+
+            <!-- LISTE DES PIÈCES -->
+
+            <ul id="listePieces"></ul>
+
+
+        </div>
 
     </div>
 
 
-</div>
+    <!-- ============================= -->
+    <!-- SCRIPTS -->
+    <!-- ============================= -->
 
+    <script src="data.js"></script>
 
-
-
-<script src="data.js"></script>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 
 
 </body>
