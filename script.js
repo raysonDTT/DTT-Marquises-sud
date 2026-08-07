@@ -1,33 +1,39 @@
+// ========================================
+// SCRIPT.JS
+// ========================================
+
 alert("SCRIPT.JS EST BIEN CHARGÉ");
 
-const cards = document.getElementById("cards");
 
+// ========================================
+// ÉLÉMENTS HTML
+// ========================================
+
+const cards = document.getElementById("cards");
 const modal = document.getElementById("modal");
 const closeBtn = document.getElementById("close");
 const retourBtn = document.getElementById("retour");
-
 const titreDemarche = document.getElementById("titreDemarche");
 const listePieces = document.getElementById("listePieces");
-
 const recherche = document.getElementById("recherche");
 
 
 // ========================================
-// HISTORIQUE DES DOSSIERS
+// HISTORIQUE
 // ========================================
 
 let historique = [];
 
 
 // ========================================
-// AFFICHER LES DOSSIERS PRINCIPAUX
+// AFFICHER LES CARTES
 // ========================================
 
 function afficherCartes(liste) {
 
     cards.innerHTML = "";
 
-    liste.forEach((demarche) => {
+    liste.forEach(function(demarche) {
 
         const carte = document.createElement("div");
 
@@ -35,23 +41,25 @@ function afficherCartes(liste) {
 
         carte.innerHTML = `
             <div class="icone">
-                ${demarche.icone ? demarche.icone : "📄"}
+                ${demarche.icone || "📄"}
             </div>
 
             <h3>${demarche.titre}</h3>
 
-            <button type="button">Consulter</button>
+            <button type="button">
+                Consulter
+            </button>
         `;
 
         const bouton = carte.querySelector("button");
 
-        bouton.onclick = function () {
+        bouton.addEventListener("click", function() {
 
             historique = [];
 
             afficherDossier(demarche);
 
-        };
+        });
 
         cards.appendChild(carte);
 
@@ -61,7 +69,7 @@ function afficherCartes(liste) {
 
 
 // ========================================
-// NORMALISER LE TEXTE
+// NORMALISER
 // ========================================
 
 function normaliser(texte) {
@@ -85,7 +93,7 @@ function rechercherDossiers(texte) {
 
     const resultats = [];
 
-    demarches.forEach((demarche) => {
+    demarches.forEach(function(demarche) {
 
         if (
             normaliser(demarche.titre)
@@ -93,14 +101,12 @@ function rechercherDossiers(texte) {
         ) {
 
             resultats.push({
-                dossier: demarche,
-                parent: null
+                dossier: demarche
             });
 
         }
 
         rechercherSousDossiers(
-            demarche,
             demarche,
             resultats,
             rechercheTexte
@@ -114,23 +120,20 @@ function rechercherDossiers(texte) {
 
 
 // ========================================
-// RECHERCHE DES SOUS-DOSSIERS
+// RECHERCHE SOUS-DOSSIERS
 // ========================================
 
 function rechercherSousDossiers(
-    dossierPrincipal,
     dossier,
     resultats,
     rechercheTexte
 ) {
 
     if (!dossier.sousDossiers) {
-
         return;
-
     }
 
-    dossier.sousDossiers.forEach((sous) => {
+    dossier.sousDossiers.forEach(function(sous) {
 
         if (
             normaliser(sous.titre)
@@ -138,14 +141,12 @@ function rechercherSousDossiers(
         ) {
 
             resultats.push({
-                dossier: sous,
-                parent: dossierPrincipal
+                dossier: sous
             });
 
         }
 
         rechercherSousDossiers(
-            dossierPrincipal,
             sous,
             resultats,
             rechercheTexte
@@ -157,49 +158,41 @@ function rechercherSousDossiers(
 
 
 // ========================================
-// RÉSULTATS DE RECHERCHE
+// AFFICHER RÉSULTATS
 // ========================================
 
 function afficherResultatsRecherche(resultats) {
 
     cards.innerHTML = "";
 
-    resultats.forEach((resultat) => {
+    resultats.forEach(function(resultat) {
+
+        const dossier = resultat.dossier;
 
         const carte = document.createElement("div");
 
         carte.className = "card";
 
-        const dossier = resultat.dossier;
-
         carte.innerHTML = `
             <div class="icone">
-                ${dossier.icone ? dossier.icone : "📄"}
+                ${dossier.icone || "📄"}
             </div>
 
             <h3>${dossier.titre}</h3>
 
-            <button type="button">Consulter</button>
+            <button type="button">
+                Consulter
+            </button>
         `;
 
-        const bouton = carte.querySelector("button");
+        carte.querySelector("button")
+            .addEventListener("click", function() {
 
-        bouton.onclick = function () {
+                historique = [];
 
-            historique = [];
+                afficherDossier(dossier);
 
-            if (resultat.parent) {
-
-                construireHistorique(
-                    resultat.parent,
-                    dossier
-                );
-
-            }
-
-            afficherDossier(dossier);
-
-        };
+            });
 
         cards.appendChild(carte);
 
@@ -209,105 +202,169 @@ function afficherResultatsRecherche(resultats) {
 
 
 // ========================================
-// CONSTRUIRE L'HISTORIQUE
+// AFFICHER UN DOSSIER
 // ========================================
 
-function construireHistorique(parent, dossierRecherche) {
+function afficherDossier(dossier) {
+
+    titreDemarche.textContent = dossier.titre;
+
+    // IMPORTANT :
+    // On vide complètement l'ancienne liste.
+    listePieces.innerHTML = "";
+
+
+// ========================================
+// SOUS-DOSSIERS
+// ========================================
+
+    if (dossier.sousDossiers) {
+
+        dossier.sousDossiers.forEach(function(sous) {
+
+            const li = document.createElement("li");
+
+            const bouton = document.createElement("button");
+
+            bouton.type = "button";
+
+            bouton.className = "sous-bouton";
+
+            bouton.textContent = sous.titre;
+
+            bouton.addEventListener("click", function() {
+
+                historique.push(dossier);
+
+                afficherDossier(sous);
+
+            });
+
+            li.appendChild(bouton);
+
+            listePieces.appendChild(li);
+
+        });
+
+    }
+
+
+// ========================================
+// PIÈCES
+// ========================================
+
+    if (dossier.pieces) {
+
+        dossier.pieces.forEach(function(piece) {
+
+            const li = document.createElement("li");
+
+            // On enlève toute ancienne présentation
+            li.innerHTML = "";
+
+            const label = document.createElement("label");
+
+            label.className = "piece-label";
+
+            const checkbox =
+                document.createElement("input");
+
+            checkbox.type = "checkbox";
+
+            checkbox.className =
+                "piece-checkbox";
+
+            const texte =
+                document.createElement("span");
+
+            texte.textContent = piece;
+
+            label.appendChild(checkbox);
+
+            label.appendChild(texte);
+
+            li.appendChild(label);
+
+            listePieces.appendChild(li);
+
+        });
+
+    }
+
+
+// ========================================
+// BOUTON RETOUR
+// ========================================
+
+    if (historique.length > 0) {
+
+        retourBtn.style.display = "inline-block";
+
+    } else {
+
+        retourBtn.style.display = "none";
+
+    }
+
+
+// ========================================
+// OUVRIR LA FENÊTRE
+// ========================================
+
+    modal.style.display = "block";
+
+}
+
+
+// ========================================
+// BOUTON RETOUR
+// ========================================
+
+retourBtn.addEventListener("click", function() {
+
+    if (historique.length === 0) {
+        return;
+    }
+
+    const precedent = historique.pop();
+
+    afficherDossier(precedent);
+
+});
+
+
+// ========================================
+// CROIX
+// ========================================
+
+closeBtn.addEventListener("click", function() {
+
+    modal.style.display = "none";
 
     historique = [];
 
-    demarches.forEach((demarche) => {
+    retourBtn.style.display = "none";
 
-        if (contientDossier(demarche, dossierRecherche)) {
-
-            trouverChemin(
-                demarche,
-                dossierRecherche,
-                []
-            );
-
-        }
-
-    });
-
-}
+});
 
 
 // ========================================
-// TROUVER LE CHEMIN
+// CLIC EN DEHORS
 // ========================================
 
-function trouverChemin(
-    dossier,
-    cible,
-    chemin
-) {
+window.addEventListener("click", function(e) {
 
-    if (dossier === cible) {
+    if (e.target === modal) {
 
-        historique = chemin.slice();
+        modal.style.display = "none";
 
-        return true;
+        historique = [];
+
+        retourBtn.style.display = "none";
 
     }
 
-    if (!dossier.sousDossiers) {
-
-        return false;
-
-    }
-
-    for (const sous of dossier.sousDossiers) {
-
-        if (
-            trouverChemin(
-                sous,
-                cible,
-                [...chemin, dossier]
-            )
-        ) {
-
-            return true;
-
-        }
-
-    }
-
-    return false;
-
-}
-
-
-// ========================================
-// VÉRIFIER UN DOSSIER
-// ========================================
-
-function contientDossier(dossier, cible) {
-
-    if (dossier === cible) {
-
-        return true;
-
-    }
-
-    if (!dossier.sousDossiers) {
-
-        return false;
-
-    }
-
-    return dossier.sousDossiers.some(
-        (sous) => contientDossier(sous, cible)
-    );
-
-}
-
-
-// ========================================
-// AFFICHAGE INITIAL
-// ========================================
-
-afficherCartes(demarches);
+});
 
 
 // ========================================
@@ -316,7 +373,7 @@ afficherCartes(demarches);
 
 if (recherche) {
 
-    recherche.addEventListener("input", function () {
+    recherche.addEventListener("input", function() {
 
         const texte = recherche.value.trim();
 
@@ -339,168 +396,7 @@ if (recherche) {
 
 
 // ========================================
-// AFFICHER UN DOSSIER
+// AFFICHAGE INITIAL
 // ========================================
 
-function afficherDossier(dossier) {
-
-    titreDemarche.textContent = dossier.titre;
-
-    listePieces.innerHTML = "";
-
-
-    // ====================================
-    // SOUS-DOSSIERS
-    // ====================================
-
-    if (dossier.sousDossiers) {
-
-        dossier.sousDossiers.forEach((sous) => {
-
-            const li = document.createElement("li");
-
-            const bouton =
-                document.createElement("button");
-
-            bouton.type = "button";
-
-            bouton.className = "sous-bouton";
-
-            bouton.textContent = sous.titre;
-
-            bouton.onclick = function () {
-
-                historique.push(dossier);
-
-                afficherDossier(sous);
-
-            };
-
-            li.appendChild(bouton);
-
-            listePieces.appendChild(li);
-
-        });
-
-    }
-
-
-    // ====================================
-    // PIÈCES AVEC CASES À COCHER
-    // ====================================
-
-    if (dossier.pieces) {
-
-        dossier.pieces.forEach((piece) => {
-
-            const li =
-                document.createElement("li");
-
-            const label =
-                document.createElement("label");
-
-            label.className = "piece-label";
-
-
-            const checkbox =
-                document.createElement("input");
-
-            checkbox.type = "checkbox";
-
-            checkbox.className =
-                "piece-checkbox";
-
-
-            const texte =
-                document.createElement("span");
-
-            texte.textContent = piece;
-
-
-            label.appendChild(checkbox);
-
-            label.appendChild(texte);
-
-            li.appendChild(label);
-
-            listePieces.appendChild(li);
-
-        });
-
-    }
-
-
-    // ====================================
-    // BOUTON RETOUR
-    // ====================================
-
-    if (historique.length > 0) {
-
-        retourBtn.style.display =
-            "inline-block";
-
-    } else {
-
-        retourBtn.style.display =
-            "none";
-
-    }
-
-
-    modal.style.display = "block";
-
-}
-
-
-// ========================================
-// BOUTON RETOUR
-// ========================================
-
-retourBtn.onclick = function () {
-
-    if (historique.length === 0) {
-
-        return;
-
-    }
-
-    const dossierPrecedent =
-        historique.pop();
-
-    afficherDossier(dossierPrecedent);
-
-};
-
-
-// ========================================
-// CROIX
-// ========================================
-
-closeBtn.onclick = function () {
-
-    modal.style.display = "none";
-
-    historique = [];
-
-    retourBtn.style.display = "none";
-
-};
-
-
-// ========================================
-// CLIQUER EN DEHORS
-// ========================================
-
-window.onclick = function (e) {
-
-    if (e.target === modal) {
-
-        modal.style.display = "none";
-
-        historique = [];
-
-        retourBtn.style.display = "none";
-
-    }
-
-};
+afficherCartes(demarches);
