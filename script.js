@@ -86,8 +86,12 @@ function rechercherDossiers(texte) {
 
     demarches.forEach((demarche) => {
 
-        // Le dossier principal correspond
-        if (normaliser(demarche.titre).includes(rechercheTexte)) {
+        // Dossier principal
+
+        if (
+            normaliser(demarche.titre)
+                .includes(rechercheTexte)
+        ) {
 
             resultats.push({
                 dossier: demarche,
@@ -97,7 +101,8 @@ function rechercherDossiers(texte) {
         }
 
 
-        // Recherche dans les sous-dossiers
+        // Sous-dossiers
+
         rechercherSousDossiers(
             demarche,
             demarche,
@@ -133,7 +138,10 @@ function rechercherSousDossiers(
 
     dossier.sousDossiers.forEach((sous) => {
 
-        if (normaliser(sous.titre).includes(rechercheTexte)) {
+        if (
+            normaliser(sous.titre)
+                .includes(rechercheTexte)
+        ) {
 
             resultats.push({
                 dossier: sous,
@@ -143,7 +151,6 @@ function rechercherSousDossiers(
         }
 
 
-        // Chercher encore plus profondément
         rechercherSousDossiers(
             dossierPrincipal,
             sous,
@@ -194,9 +201,6 @@ function afficherResultatsRecherche(resultats) {
             historique = [];
 
 
-            // Si le résultat est un sous-dossier,
-            // on mémorise son chemin jusqu'au dossier principal.
-
             if (resultat.parent) {
 
                 construireHistorique(
@@ -228,7 +232,6 @@ function construireHistorique(parent, dossierRecherche) {
     historique = [];
 
 
-    // On retrouve le chemin depuis le dossier principal
     demarches.forEach((demarche) => {
 
         if (contientDossier(demarche, dossierRecherche)) {
@@ -295,7 +298,7 @@ function trouverChemin(
 
 
 // ========================================
-// VÉRIFIER SI UN DOSSIER EST PRÉSENT
+// VÉRIFIER SI UN DOSSIER EXISTE
 // ========================================
 
 function contientDossier(dossier, cible) {
@@ -348,7 +351,8 @@ if (recherche) {
         }
 
 
-        const resultats = rechercherDossiers(texte);
+        const resultats =
+            rechercherDossiers(texte);
 
 
         afficherResultatsRecherche(resultats);
@@ -404,28 +408,52 @@ function afficherDossier(dossier) {
         });
 
     }
+
+
     // ====================================
-// PIÈCES AVEC CASES À COCHER
-// ====================================
+    // PIÈCES AVEC CASES À COCHER
+    // ====================================
 
-if (dossier.pieces) {
+    if (dossier.pieces) {
 
-    dossier.pieces.forEach((piece) => {
+        dossier.pieces.forEach((piece) => {
 
-        const li = document.createElement("li");
+            const li = document.createElement("li");
 
-        li.innerHTML = `
-            <label class="piece-label">
-                <input type="checkbox" class="piece-checkbox">
-                <span>${piece}</span>
-            </label>
-        `;
 
-        listePieces.appendChild(li);
+            const label =
+                document.createElement("label");
 
-    });
+            label.className = "piece-label";
 
-}
+
+            const checkbox =
+                document.createElement("input");
+
+            checkbox.type = "checkbox";
+
+            checkbox.className = "piece-checkbox";
+
+
+            const texte =
+                document.createElement("span");
+
+            texte.textContent = piece;
+
+
+            label.appendChild(checkbox);
+
+            label.appendChild(texte);
+
+
+            li.appendChild(label);
+
+            listePieces.appendChild(li);
+
+        });
+
+    }
+
 
     // ====================================
     // BOUTON RETOUR
@@ -441,6 +469,10 @@ if (dossier.pieces) {
 
     }
 
+
+    // ====================================
+    // OUVRIR LA FENÊTRE
+    // ====================================
 
     modal.style.display = "block";
 
@@ -460,7 +492,9 @@ retourBtn.onclick = function () {
     }
 
 
-    const dossierPrecedent = historique.pop();
+    const dossierPrecedent =
+        historique.pop();
+
 
     afficherDossier(dossierPrecedent);
 
@@ -468,7 +502,7 @@ retourBtn.onclick = function () {
 
 
 // ========================================
-// CROIX
+// CROIX DE FERMETURE
 // ========================================
 
 closeBtn.onclick = function () {
