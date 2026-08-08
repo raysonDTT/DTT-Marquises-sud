@@ -2,9 +2,6 @@
 // SCRIPT.JS
 // ========================================
 
-alert("SCRIPT.JS EST BIEN CHARGÉ");
-
-
 // ========================================
 // ÉLÉMENTS HTML
 // ========================================
@@ -69,7 +66,7 @@ function afficherCartes(liste) {
 
 
 // ========================================
-// NORMALISER
+// NORMALISER LE TEXTE
 // ========================================
 
 function normaliser(texte) {
@@ -158,7 +155,7 @@ function rechercherSousDossiers(
 
 
 // ========================================
-// AFFICHER RÉSULTATS
+// AFFICHER LES RÉSULTATS
 // ========================================
 
 function afficherResultatsRecherche(resultats) {
@@ -209,14 +206,13 @@ function afficherDossier(dossier) {
 
     titreDemarche.textContent = dossier.titre;
 
-    // IMPORTANT :
-    // On vide complètement l'ancienne liste.
+    // On vide complètement la liste
     listePieces.innerHTML = "";
 
 
-// ========================================
-// SOUS-DOSSIERS
-// ========================================
+    // ====================================
+    // SOUS-DOSSIERS
+    // ====================================
 
     if (dossier.sousDossiers) {
 
@@ -249,9 +245,9 @@ function afficherDossier(dossier) {
     }
 
 
-// ========================================
-// PIÈCES
-// ========================================
+    // ====================================
+    // PIÈCES AVEC CASES À COCHER
+    // ====================================
 
     if (dossier.pieces) {
 
@@ -259,13 +255,12 @@ function afficherDossier(dossier) {
 
             const li = document.createElement("li");
 
-            // On enlève toute ancienne présentation
-            li.innerHTML = "";
-
             const label = document.createElement("label");
 
             label.className = "piece-label";
 
+
+            // CASE À COCHER
             const checkbox =
                 document.createElement("input");
 
@@ -274,11 +269,15 @@ function afficherDossier(dossier) {
             checkbox.className =
                 "piece-checkbox";
 
+
+            // TEXTE DE LA PIÈCE
             const texte =
                 document.createElement("span");
 
             texte.textContent = piece;
 
+
+            // ASSEMBLAGE
             label.appendChild(checkbox);
 
             label.appendChild(texte);
@@ -292,9 +291,9 @@ function afficherDossier(dossier) {
     }
 
 
-// ========================================
-// BOUTON RETOUR
-// ========================================
+    // ====================================
+    // BOUTON RETOUR
+    // ====================================
 
     if (historique.length > 0) {
 
@@ -307,9 +306,9 @@ function afficherDossier(dossier) {
     }
 
 
-// ========================================
-// OUVRIR LA FENÊTRE
-// ========================================
+    // ====================================
+    // AFFICHER LA FENÊTRE
+    // ====================================
 
     modal.style.display = "block";
 
@@ -349,7 +348,7 @@ closeBtn.addEventListener("click", function() {
 
 
 // ========================================
-// CLIC EN DEHORS
+// CLIC EN DEHORS DE LA FENÊTRE
 // ========================================
 
 window.addEventListener("click", function(e) {
